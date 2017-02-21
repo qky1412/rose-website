@@ -1,6 +1,12 @@
 <template>
-  <div class="">
-    {{msg}}
+  <div class="container">
+    <h1 class="title-main">
+      {{title}}
+    </h1>
+    <h2 class="title-sub">
+      {{sub_title}}
+    </h2>
+    <el-button type="primary" :loading="true">加载中</el-button>
   </div>
 </template>
 
@@ -9,7 +15,8 @@ export default {
   name: 'Splash',
   data () {
     return {
-      msg: 'Rapid On-Site Evaluation'
+      title: 'Rapid On-Site Evaluation',
+      sub_title: '复旦大学附属中山医院呼吸内科气管镜室'
     }
   },
   methods: {
@@ -21,12 +28,27 @@ export default {
     var self = this
     setTimeout(function () {
       self.goToHome()
-    }, 2000)
+    }, 4000)
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
+<style scoped lang="less" rel="stylesheet/less">
+  .title-main {
+    font-size: 45px;
+    text-align: center;
+    margin-top: 20%;
+  }
+  .title-sub {
+    font-size: 20px;
+    text-align: center;
+    text-indent: 8em;
+  }
+  .container {
+    text-align: center;
+  }
+  .el-button {
+    margin-top: 2em;
+  }
 </style>
