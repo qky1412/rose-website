@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from 'components/Home'
 import Splash from 'components/SplashScreen'
 import Layout from 'components/Layout'
+import New from 'components/New'
 
 Vue.use(VueRouter)
 const routes = [
@@ -14,6 +15,11 @@ const routes = [
         path: '/',
         component: Home,
         meta: { notKeepAlive: false }
+      },
+      {
+        path: '/new',
+        component: New,
+        meta: { notKeepAlive: true }
       }
     ]
   },

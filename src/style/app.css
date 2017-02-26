@@ -7,3 +7,29 @@ body {
   padding: 0;
   margin: 0;
 }
+.el-breadcrumb {
+  padding: 10px;
+  font-size: 16px;
+}
+.button-new {
+  float: right;
+}
+.el-pagination {
+  float: right;
+  margin-top: 10px;
+}
+.el-input-number {
+  width: 100%;
+  max-width: 360px;
+}
+.el-input {
+  max-width: 360px;
+}
+.btn-delete {
+  color: red;
+  float: right;
+}
+label {
+  color: #48576a;
+  font-size: 14px;
+}

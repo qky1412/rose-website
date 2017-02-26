@@ -1,6 +1,6 @@
 <template>
   <div id="page-list">
-    <el-breadcrumb separator="/" style="padding: 10px;">
+    <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/home' }">患者列表</el-breadcrumb-item>
     </el-breadcrumb>
 
@@ -29,7 +29,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column 
+      <el-table-column
                        label="姓名"
                        width="100"
                        align="center"
@@ -41,7 +41,7 @@
       </el-table-column>
       <el-table-column
         label="年龄"
-        width="100"
+        width="70"
         align="center"
       >
         <template scope="scope">
@@ -54,7 +54,7 @@
         align="center"
       >
         <template scope="scope">
-          <p>2017-02-21</p>
+          <p>{{ scope.row.date }}</p>
         </template>
       </el-table-column>
       <el-table-column
@@ -63,37 +63,35 @@
         align="center"
       >
         <template scope="scope">
-          <p>2017-02-21</p>
+          <p>{{ scope.row.weasand_lens}}</p>
         </template>
       </el-table-column>
       <el-table-column
         label="病理诊断"
-        width="120"
-        align="center"
+        width="150"
+        align="left"
       >
         <template scope="scope">
-          <p>2017-02-21</p>
-        </template>
-      </el-table-column>
-      <el-table-column align="left"
-                       label="ROSE诊断"
-
-      >
-        <template scope="scope" >
-          <p class="table-text">333</p>
+          <p>{{ scope.row.pathology_diagnosis }}</p>
         </template>
       </el-table-column>
 
       <el-table-column
-        inline-template
-        :context="_self"
+        label="ROSE诊断"
+        align="left"
+      >
+        <template scope="scope">
+          <p>{{ scope.row.diagnosis }}</p>
+        </template>
+      </el-table-column>
+      <el-table-column
         fixed="right"
-        width="150"
-        label="操作">
-                  <span>
-                    <el-button type="text" size="small">编辑</el-button>
-                    <el-button type="text" size="small">删除</el-button>
-                  </span>
+        label="操作"
+        width="150">
+        <template scope="scope">
+          <el-button type="text" >查看</el-button>
+          <el-button type="text">编辑</el-button>
+        </template>
       </el-table-column>
     </el-table>
 
@@ -114,15 +112,20 @@
 </template>
 
 <script>
+import PatientApi from '../api/Patient'
 export default {
   name: 'Home',
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
+      params: {
+        page: 1,
+        pageSize: 15
+      },
       searchForm: {
         type: '0'
       },
-      tableData:[{'name': 'name', 'age': 38}],
+      tableData:[],
       loadingList: false,
       currentPage: 0,
       pageSize: 15,
@@ -143,10 +146,26 @@ export default {
       this.fetch({pageSize})
     },
     fetch (data = {}) {
-      this.loadingList = false
+      this.loadingList = true
+        const params = Object.assign(this.params, this.searchForm, data)
+        PatientApi.list(params, response => {
+          let data = response.data.result
+          this.tableData = data.dataList
+          this.total = data.total
+          this.loadingList = false
+        }, error => {
+          this.loadingList = false
+          console.log('error: ' + JSON.stringify(error))
+        })
     },
     create () {
+      this.$router.push('/new')
     }
+  },
+  created () {
+      if (this.tableData.length === 0) {
+        this.fetch()
+      }
   }
 }
 </script>
@@ -155,15 +174,5 @@ export default {
 <style scoped lang="less" rel="stylesheet/less">
   #page-list {
     padding: 20px;
-  }
-  .button-new {
-    float: right;
-  }
-  .el-breadcrumb {
-    font-size: 16px;
-  }
-  .el-pagination {
-    float: right;
-    margin-top: 10px;
   }
 </style>
