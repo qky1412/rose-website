@@ -10,7 +10,7 @@
         <el-row>
           <el-col :span="8">
             <el-form-item label="日期">
-              <el-date-picker type="date" placeholder="选择日期" v-model="form.date" style="width: 100%;"></el-date-picker>
+              <el-date-picker type="date" format="yyyy-MM-dd" placeholder="选择日期" v-model="form.date" style="width: 100%;" @change="dateChange"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -38,24 +38,43 @@
           <el-col :span="8">
             <el-form-item label="性别">
               <el-select v-model="form.gender" placeholder="性别">
-                <el-option label="男" value="0"></el-option>
-                <el-option label="女" value="1"></el-option>
+                <el-option
+                  v-for="item in genders"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
               </el-select>
             </el-form-item>
           </el-col>
         </el-row>
-        <label>简要病史</label>
-        <single-image ref="image_history"
-                      :default-img-list="imageList"
-                      key-prefix="rose_history">
+        <el-row>
+          <el-col :span="8">
+            <label>简要病史</label>
+            <single-image ref="image_history"
+                          :default-img-list="imageList"
+                          key-prefix="rose_history">
 
-        </single-image>
-        <label>影像图片</label>
-        <single-image ref="image_image"
-                      :default-img-list="imageList"
-                      key-prefix="rose_image">
+            </single-image>
+          </el-col>
+          <el-col :span="8">
+            <label>影像图片</label>
+            <single-image ref="image_image"
+                          :default-img-list="imageList"
+                          key-prefix="rose_image">
 
-        </single-image>
+            </single-image>
+          </el-col>
+          <el-col :span="8">
+            <label>气管镜报告</label>
+            <single-image ref="image_report"
+                          :default-img-list="imageList"
+                          key-prefix="rose_report">
+
+            </single-image>
+          </el-col>
+        </el-row>
+
+
 
 
       </el-card>
@@ -74,10 +93,11 @@
           <el-col :span="8">
             <el-form-item label="气管镜">
               <el-select v-model="s.weasand_lens" placeholder="气管镜">
-                <el-option label="普镜(直视下)" value="0"></el-option>
-                <el-option label="普镜(TBLB)" value="1"></el-option>
-                <el-option label="外周超声(EBUS-GS)" value="2"></el-option>
-                <el-option label="中央超声(EBUS-TBNA)" value="3"></el-option>
+                <el-option
+                  v-for="item in weasand_lens"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -86,10 +106,11 @@
           <el-col :span="8">
             <el-form-item label="涂片类型">
               <el-select v-model="s.type" placeholder="涂片类型">
-                <el-option label="刷检(活检前)" value="0"></el-option>
-                <el-option label="刷检(活检后)" value="1"></el-option>
-                <el-option label="细针穿刺涂片" value="2"></el-option>
-                <el-option label="活检组织印片" value="3"></el-option>
+                <el-option
+                  v-for="item in smear_types"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -117,17 +138,11 @@
           <el-col :span="8">
             <el-form-item label="病理诊断">
               <el-select v-model="form.pathology_diagnosis" >
-                <el-option label="肺腺癌" value="1"></el-option>
-                <el-option label="肺鳞癌" value="2"></el-option>
-                <el-option label="小细胞肺癌" value="3"></el-option>
-                <el-option label="大细胞肺癌" value="4"></el-option>
-                <el-option label="肺部感染(真菌、结核)" value="5"></el-option>
-                <el-option label="机化性肺炎" value="6"></el-option>
-                <el-option label="间质性肺炎" value="7"></el-option>
-                <el-option label="结节病" value="8"></el-option>
-                <el-option label="肺肉瘤" value="9"></el-option>
-                <el-option label="未见肿瘤及肉芽肿证据" value="10"></el-option>
-                <el-option label="其他" value="11"></el-option>
+                <el-option
+                  v-for="item in pathology_diagnosis"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -157,9 +172,14 @@ export default {
   data () {
     return {
       imageList: [],
+      genders: [{label: '男', value: 0},{label: '女', value: 1}],
+      pathology_diagnosis: [{label: '肺腺癌', value: '1'},{label: '肺鳞癌', value: '2'},{label: '小细胞肺癌', value: '3'},{label: '大细胞肺癌', value: '4'},{label: '肺部感染(真菌、结核)', value: '5'},
+      {label: '机化性肺炎', value: '6'}, {label: '间质性肺炎', value: '7'}, {label: '结节病', value: '8'}, {label: '肺肉瘤', value: '9'}, {label: '未见肿瘤及肉芽肿证据', value: '10'}, {label: '其他', value: '11'}],
+      smear_types: [{label: '刷检(活检前)', value: 0}, {label: '刷检(活检后)', value: 1}, {label: '细针穿刺涂片', value: 2}, {label: '活检组织印片', value: 3}],
+      weasand_lens: [{label: '普镜(直视下)', value: 0}, {label: '普镜(TBLB)', value: 1}, {label: '外周超声(EBUS-GS)', value: 2}, {label: '中央超声(EBUS-TBNA)', value: 3}],
       form: {
         date: '2017-02-24',
-        gender: '0',
+        gender: 0,
         age: '0',
         name: '',
         no: '',
@@ -167,7 +187,8 @@ export default {
         smears: [{location: '', weasand_lens: '0', type: '0', diagnosis: '', defaultImages: [], images: []}],
         cell_diagnosis: '',
         pathology_diagnosis: '1',
-        images: []
+        images: [],
+        remark: ''
       },
       rules : {
         date1: [{ type: 'date', required: true, message: '请输入日期', trigger: 'change'}]
@@ -176,6 +197,10 @@ export default {
     }
   },
   methods: {
+    dateChange (value) {
+      console.log(value)
+      this.form.date = value
+    },
     addSmear () {
       this.form.smears.push({location: '', weasand_lens: '0', type: '0', diagnosis: '', defaultImages: [], images: []})
     },
@@ -199,7 +224,7 @@ export default {
     onSubmit (formName) {
       var _self = this
       this.posting = true
-      const images = {images: this.$refs.image_history.getFileList(0).concat(this.$refs.image_image.getFileList(1))}
+      const images = {images: this.$refs.image_history.getFileList(0).concat(this.$refs.image_image.getFileList(1)).concat(this.$refs.image_report.getFileList(2))}
       const params = Object.assign(this.form, images)
       this.form.smears.forEach( function (item, index) {
         var images = _self.$refs.smearImages[index].getFileList(0)

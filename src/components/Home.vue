@@ -9,7 +9,7 @@
         <label>病理诊断</label>
         <el-form-item style="margin-right: 0;">
           <el-select v-model="searchForm.pathology" placeholder="搜索条件" >
-            <el-option label="全部" value="0"></el-option>
+            <el-option label="全部" value=""></el-option>
             <el-option label="肺腺癌" value="1"></el-option>
             <el-option label="肺鳞癌" value="2"></el-option>
             <el-option label="小细胞肺癌" value="3"></el-option>
@@ -96,10 +96,11 @@
       <el-table-column
         fixed="right"
         label="操作"
-        width="150">
+        width="160">
         <template scope="scope">
           <el-button type="text" >查看</el-button>
           <el-button type="text" @click="enterEdit(scope.row)">编辑</el-button>
+          <el-button type="text" @click="handleDelete(scope.row)" style="color: red;">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -132,7 +133,7 @@ export default {
         pageSize: 15
       },
       searchForm: {
-        pathology: '0'
+        pathology: ''
       },
       tableData:[],
       loadingList: false,
@@ -174,6 +175,27 @@ export default {
     },
     enterEdit (row) {
       this.$router.push({name: 'Edit', params: {id: row.id}})
+    },
+    handleDelete (row) {
+      const deleteId = row.id
+        this.$confirm('此操作将永久删除该患者，是否确定删除？', '提示', {
+          confirmButtonText: '删除',
+          cancelButtonText: '取消',
+          type: 'error'
+        }).then(() => {
+          PatientApi.delete(deleteId, response => {
+            if (response.data.message === 'ok') {
+              this.$message({type: 'success', message: '删除成功!'})
+              this.fetch()
+            } else {
+              this.$message({type: 'error', message: '删除失败!'})
+            }
+          }, error => {
+            console.log(error)
+            this.$message({type: 'error', message: '删除失败!'})
+          })
+        }).catch(() => {
+        })
     }
   },
   created () {
@@ -184,14 +206,15 @@ export default {
   },
   filters: {
     formatWeasandLens: function (value) {
+    console.log(value)
       switch (value) {
-      case '0':
+      case 0:
         return '普镜(直视下)'
-      case '1':
+      case 1:
         return '普镜(TBLB)'
-      case '2':
+      case 2:
         return '外周超声(EBUS-GS)'
-      case '3':
+      case 3:
         return '中央超声(EBUS-TBNA)'
       default:
         return ''

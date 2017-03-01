@@ -41,8 +41,7 @@
       background: #F3F4F6;
     }
     .el-dragger {
-      width: 450px;
-      height: 180px;
+
 
       .el-draggeer__cover__btns span.btn {
         display: inline-block;
