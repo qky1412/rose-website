@@ -8,10 +8,19 @@
       <el-form :inline="true"  ref="searchForm" :model="searchForm" class="search-form">
         <label>病理诊断</label>
         <el-form-item style="margin-right: 0;">
-          <el-select v-model="searchForm.type" placeholder="搜索条件" >
+          <el-select v-model="searchForm.pathology" placeholder="搜索条件" >
             <el-option label="全部" value="0"></el-option>
             <el-option label="肺腺癌" value="1"></el-option>
             <el-option label="肺鳞癌" value="2"></el-option>
+            <el-option label="小细胞肺癌" value="3"></el-option>
+            <el-option label="大细胞肺癌" value="4"></el-option>
+            <el-option label="肺部感染(真菌、结核)" value="5"></el-option>
+            <el-option label="机化性肺炎" value="6"></el-option>
+            <el-option label="间质性肺炎" value="7"></el-option>
+            <el-option label="结节病" value="8"></el-option>
+            <el-option label="肺肉瘤" value="9"></el-option>
+            <el-option label="未见肿瘤及肉芽肿证据" value="10"></el-option>
+            <el-option label="其他" value="11"></el-option>
           </el-select>
         </el-form-item>
         <el-button type="primary" class="button-new" @click="create" icon="plus">新建</el-button>
@@ -25,7 +34,7 @@
         align="center"
       >
         <template scope="scope">
-          <p>0</p>
+          <p>{{ scope.row.no}}</p>
         </template>
       </el-table-column>
 
@@ -63,7 +72,7 @@
         align="center"
       >
         <template scope="scope">
-          <p>{{ scope.row.weasand_lens}}</p>
+          <p>{{ scope.row.weasand_lens | formatWeasandLens}}</p>
         </template>
       </el-table-column>
       <el-table-column
@@ -72,7 +81,7 @@
         align="left"
       >
         <template scope="scope">
-          <p>{{ scope.row.pathology_diagnosis }}</p>
+          <p>{{ scope.row.pathology_diagnosis | formatPathology }}</p>
         </template>
       </el-table-column>
 
@@ -90,7 +99,7 @@
         width="150">
         <template scope="scope">
           <el-button type="text" >查看</el-button>
-          <el-button type="text">编辑</el-button>
+          <el-button type="text" @click="enterEdit(scope.row)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -113,17 +122,17 @@
 
 <script>
 import PatientApi from '../api/Patient'
+import {eventHandler} from '../EventHandler'
 export default {
   name: 'Home',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
       params: {
         page: 1,
         pageSize: 15
       },
       searchForm: {
-        type: '0'
+        pathology: '0'
       },
       tableData:[],
       loadingList: false,
@@ -136,6 +145,8 @@ export default {
   },
   methods: {
     handleSubmit () {
+      this.currentPage = 1
+      this.fetch()
     },
     handleCurrentChange (page) {
       this.currentPage = page
@@ -160,12 +171,58 @@ export default {
     },
     create () {
       this.$router.push('/new')
+    },
+    enterEdit (row) {
+      this.$router.push({name: 'Edit', params: {id: row.id}})
     }
   },
   created () {
       if (this.tableData.length === 0) {
         this.fetch()
       }
+      eventHandler.$on('reloadList', this.fetch)
+  },
+  filters: {
+    formatWeasandLens: function (value) {
+      switch (value) {
+      case '0':
+        return '普镜(直视下)'
+      case '1':
+        return '普镜(TBLB)'
+      case '2':
+        return '外周超声(EBUS-GS)'
+      case '3':
+        return '中央超声(EBUS-TBNA)'
+      default:
+        return ''
+      }
+    },
+    formatPathology: function (value) {
+      switch (value) {
+      case '1':
+        return '肺腺癌'
+      case '2':
+        return '肺鳞癌'
+      case '3':
+        return '小细胞肺癌'
+      case '4':
+        return '大细胞肺癌'
+      case '5':
+        return '肺部感染(真菌、结核)'
+      case '6':
+        return '机化性肺炎'
+      case '7':
+        return '间质性肺炎'
+      case '8':
+        return '结节病'
+      case '9':
+        return '肺肉瘤'
+      case '10':
+        return '未见肿瘤及肉芽肿证据'
+      default:
+        return '其他'
+      }
+    }
   }
 }
 </script>

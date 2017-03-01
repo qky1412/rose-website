@@ -33,3 +33,6 @@ label {
   color: #48576a;
   font-size: 14px;
 }
+img {
+  object-fit: cover;
+}

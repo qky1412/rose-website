@@ -5,7 +5,7 @@
       <el-breadcrumb-item >新建</el-breadcrumb-item>
     </el-breadcrumb>
 
-    <el-form ref="patient_form" :modal="form" :rules="rules" label-width="90px" label-position="right" v-loading="posting">
+    <el-form ref="patient_form" :modal="form" :rules="rules" label-width="90px" label-position="right" v-loading="posting" v-if="!dataLoading">
       <el-card style="margin-top: 1em;">
         <el-row>
           <el-col :span="8">
@@ -46,13 +46,13 @@
         </el-row>
         <label>简要病史</label>
         <single-image ref="image_history"
-                      :default-img-list="imageList"
+                      :default-img-list="history_image_list"
                       key-prefix="rose_history">
 
         </single-image>
         <label>影像图片</label>
         <single-image ref="image_image"
-                      :default-img-list="imageList"
+                      :default-img-list="image_image_list"
                       key-prefix="rose_image">
 
         </single-image>
@@ -96,7 +96,7 @@
         </el-row>
         <el-row>
           <label class="label">ROSE涂片：</label>
-          <upload-list ref="smearImages" :defaultImgList="s.defaultImages" keyPrefix="rose_smear"></upload-list>
+          <upload-list ref="smearImages" :defaultImgList="s.images" keyPrefix="rose_smear"></upload-list>
         </el-row>
         <el-row style="margin-top: 1em;">
           <el-form-item label="ROSE诊断">
@@ -152,7 +152,7 @@ import SingleImage from './SingleImage'
 import UploadList from './UploadList'
 import {eventHandler} from '../EventHandler'
 export default {
-  name: 'New',
+  name: 'Edit',
   components: {SingleImage, UploadList},
   data () {
     return {
@@ -164,7 +164,7 @@ export default {
         name: '',
         no: '',
         number: '',
-        smears: [{location: '', weasand_lens: '0', type: '0', diagnosis: '', defaultImages: [], images: []}],
+        smears: [{location: '', weasand_lens: '0', type: '0', diagnosis: '', images: []}],
         cell_diagnosis: '',
         pathology_diagnosis: '1',
         images: []
@@ -172,12 +172,49 @@ export default {
       rules : {
         date1: [{ type: 'date', required: true, message: '请输入日期', trigger: 'change'}]
       },
-      posting: false
+      posting: false,
+      dataLoading: true
     }
+  },
+  beforeMount () {
+    this.dataLoading = true
+    PatientApi.get(this.$route.params.id, response => {
+      console.log(response)
+      if (response.data.result.id != null) {
+        const patient = response.data.result
+        this.form.date = patient.date
+        this.form.gender = patient.gender
+        this.form.age = patient.age
+        this.form.name = patient.name
+        this.form.no = patient.no
+        this.form.number = patient.number
+        this.form.smears = patient.smears
+        this.form.cell_diagnosis = patient.cell_diagnosis
+        this.form.pathology_diagnosis = patient.pathology_diagnosis
+        this.history_image_list = patient.images.filter(function (item) {
+          return item.type === 0
+        })
+        this.image_image_list = patient.images.filter(function (item) {
+          return item.type === 1
+        })
+        this.dataLoading = false
+      } else {
+        this.$message({
+          message: '获取数据失败',
+          type: 'error'
+        })
+      }
+    }, error => {
+      this.dataLoading = false
+      this.$message({
+        message: error,
+        type: 'error'
+      })
+    })
   },
   methods: {
     addSmear () {
-      this.form.smears.push({location: '', weasand_lens: '0', type: '0', diagnosis: '', defaultImages: [], images: []})
+      this.form.smears.push({location: '', weasand_lens: '0', type: '0', diagnosis: '', images: []})
     },
     formSmearRefs (index) {
       return 'smearImage' + index
@@ -206,7 +243,7 @@ export default {
         item.images = images
       })
       console.log(params)
-      PatientApi.create(params, response => {
+      PatientApi.update(this.$route.params.id, params, response => {
         console.log(response)
         this.posting = false
         eventHandler.$emit('reloadList')

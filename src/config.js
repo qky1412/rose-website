@@ -7,7 +7,7 @@ let env = process.env.NODE_ENV || 'development'
 let configs = {
     'development': {
         homeUrl: '/',
-        serverUrl: 'http://192.168.0.101:8888',
+        serverUrl: 'http://test.boostfield.com:5000',
         uploadServerUrl: 'http://rosewebsite.oss-cn-shanghai.aliyuncs.com'
     },
     'production': {

@@ -4,6 +4,7 @@ import Home from 'components/Home'
 import Splash from 'components/SplashScreen'
 import Layout from 'components/Layout'
 import New from 'components/New'
+import Edit from 'components/Edit'
 
 Vue.use(VueRouter)
 const routes = [
@@ -19,6 +20,12 @@ const routes = [
       {
         path: '/new',
         component: New,
+        meta: { notKeepAlive: true }
+      },
+      {
+        name: 'Edit',
+        path: '/edit/:id',
+        component: Edit,
         meta: { notKeepAlive: true }
       }
     ]
