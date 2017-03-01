@@ -1,5 +1,10 @@
 <template>
   <div v-loading="dataLoading" style="text-align: left">
+    <el-dialog title="" v-model="previewVisible" size="large">
+      <div style="text-align: center;">
+        <img :src="imagePreview" class="imagePreview"/>
+      </div>
+    </el-dialog>
     <div style="max-width: 1090px; margin: 0 auto;">
       <el-row>
         <el-col :span="5">Date: {{patient.date}}</el-col>
@@ -14,7 +19,7 @@
       <hr />
       <el-row>
         <p>简要病史、胸部CT、气管镜报告</p>
-        <img v-for="image in patient.images" :src="setImageUrl(image.url)" width="400px" style="max-width: 100%;"/>
+        <img v-for="image in patient.images" :src="setImageUrl(image.url)" width="400px" style="max-width: 100%;" @click="previewImage(setImageUrl(image.url))"/>
       </el-row>
       <hr />
       <div v-for="(smear, $index) in patient.smears">
@@ -25,7 +30,7 @@
           <el-col :span="12">涂片类型: {{smear.type | formatSmearType}}</el-col>
         </el-row>
         <el-row>
-          <img v-for="image in smear.images" :src="setImageUrl(image.url)" width="400px" style="max-width: 100%;"/>
+          <img v-for="image in smear.images" :src="setImageUrl(image.url)" width="400px" style="max-width: 100%;" @click="previewImage(setImageUrl(image.url))"/>
         </el-row>
         <hr />
         <el-row>ROSE诊断: {{smear.diagnosis}}</el-row>
@@ -45,6 +50,13 @@
   .el-row {
     padding: 1em;
   }
+  .imagePreview {
+    max-width: 90%;
+    height: auto;
+    text-align: center;
+    margin: 10px auto;
+    display: block;
+  }
 </style>
 <script>
 import PatientApi from '../api/Patient'
@@ -54,12 +66,18 @@ export default {
   data () {
     return {
       dataLoading: true,
-      patient: {}
+      patient: {},
+      imagePreview: '',
+      previewVisible: false
     }
   },
   methods:  {
     setImageUrl (value) {
       return setImageUrl(value)
+    },
+    previewImage (src) {
+      this.imagePreview = src
+      this.previewVisible = true
     }
   },
   beforeMount () {
