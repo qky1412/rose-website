@@ -5,6 +5,7 @@ import Splash from 'components/SplashScreen'
 import Layout from 'components/Layout'
 import New from 'components/New'
 import Edit from 'components/Edit'
+import Preview from 'components/Preview'
 
 Vue.use(VueRouter)
 const routes = [
@@ -26,6 +27,12 @@ const routes = [
         name: 'Edit',
         path: '/edit/:id',
         component: Edit,
+        meta: { notKeepAlive: true }
+      },
+      {
+        name: 'Preview',
+        path: '/preview/:id',
+        component: Preview,
         meta: { notKeepAlive: true }
       }
     ]

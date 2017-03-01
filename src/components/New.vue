@@ -184,7 +184,7 @@ export default {
         name: '',
         no: '',
         number: '',
-        smears: [{location: '', weasand_lens: '0', type: '0', diagnosis: '', defaultImages: [], images: []}],
+        smears: [{location: '', weasand_lens: 0, type: 0, diagnosis: '', defaultImages: [], images: []}],
         cell_diagnosis: '',
         pathology_diagnosis: '1',
         images: [],
@@ -202,7 +202,7 @@ export default {
       this.form.date = value
     },
     addSmear () {
-      this.form.smears.push({location: '', weasand_lens: '0', type: '0', diagnosis: '', defaultImages: [], images: []})
+      this.form.smears.push({location: '', weasand_lens: 0, type: 0, diagnosis: '', defaultImages: [], images: []})
     },
     formSmearRefs (index) {
       return 'smearImage' + index

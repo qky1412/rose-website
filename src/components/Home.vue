@@ -98,7 +98,7 @@
         label="操作"
         width="160">
         <template scope="scope">
-          <el-button type="text" >查看</el-button>
+          <el-button type="text" @click="enterPreview(scope.row)">查看</el-button>
           <el-button type="text" @click="enterEdit(scope.row)">编辑</el-button>
           <el-button type="text" @click="handleDelete(scope.row)" style="color: red;">删除</el-button>
         </template>
@@ -176,6 +176,9 @@ export default {
     enterEdit (row) {
       this.$router.push({name: 'Edit', params: {id: row.id}})
     },
+    enterPreview (row) {
+      this.$router.push({name: 'Preview', params: {id: row.id}})
+    },
     handleDelete (row) {
       const deleteId = row.id
         this.$confirm('此操作将永久删除该患者，是否确定删除？', '提示', {
@@ -206,7 +209,6 @@ export default {
   },
   filters: {
     formatWeasandLens: function (value) {
-    console.log(value)
       switch (value) {
       case 0:
         return '普镜(直视下)'

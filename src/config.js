@@ -12,7 +12,7 @@ let configs = {
     },
     'production': {
         homeUrl: '/',
-        serverUrl: 'https://api2.musicbible.com',
+        serverUrl: 'http://test.boostfield.com:5000',
         uploadServerUrl: 'http://rosewebsite.oss-cn-shanghai.aliyuncs.com'
     }
 }
