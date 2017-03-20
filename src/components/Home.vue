@@ -210,6 +210,8 @@ export default {
   filters: {
     formatWeasandLens: function (value) {
       switch (value) {
+      case -1:
+        return ''
       case 0:
         return '普镜(直视下)'
       case 1:
@@ -224,6 +226,8 @@ export default {
     },
     formatPathology: function (value) {
       switch (value) {
+      case '0':
+        return ''
       case '1':
         return '肺腺癌'
       case '2':

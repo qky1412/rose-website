@@ -1,8 +1,9 @@
 <template>
-  <div v-loading="dataLoading" style="text-align: left">
+  <div v-loading="dataLoading" style="text-align: left" class="page-preview">
     <el-dialog title="" v-model="previewVisible" size="large">
-      <div style="text-align: center;">
-        <img :src="imagePreview" class="imagePreview"/>
+      <div  style="text-align: center;">
+        <p>点击图片可以进行更多操作</p>
+        <img id="imagePreview" :src="imagePreview" class="imagePreview"/>
       </div>
     </el-dialog>
     <div style="max-width: 1090px; margin: 0 auto;">
@@ -19,7 +20,10 @@
       <hr />
       <el-row>
         <p>简要病史、胸部CT、气管镜报告</p>
-        <img v-for="image in patient.images" :src="setImageUrl(image.url)" width="400px" style="max-width: 100%;" @click="previewImage(setImageUrl(image.url))"/>
+        <div id="images1">
+          <img v-for="image in patient.images" :src="setImageUrl(image.url)" width="400px" style="max-width: 100%;margin-right: 1em;" @click="previewImage(setImageUrl(image.url, 'origin'))"/>
+        </div>
+
       </el-row>
       <hr />
       <div v-for="(smear, $index) in patient.smears">
@@ -30,37 +34,54 @@
           <el-col :span="12">涂片类型: {{smear.type | formatSmearType}}</el-col>
         </el-row>
         <el-row>
-          <img v-for="image in smear.images" :src="setImageUrl(image.url)" width="400px" style="max-width: 100%;" @click="previewImage(setImageUrl(image.url))"/>
+          <img v-for="image in smear.images" :src="setImageUrl(image.url)" width="400px" style="max-width: 100%;margin-right: 1em;" @click="previewImage(setImageUrl(image.url, 'origin'))"/>
         </el-row>
         <hr />
         <el-row>ROSE诊断: {{smear.diagnosis}}</el-row>
         <hr />
       </div>
+      <div v-if="patient.remark">
+        <el-row >
+          备注: {{patient.remark}}
+
+        </el-row>
+        <hr />
+      </div>
+
       <el-row>
-        <el-col :span="4">结果反馈</el-col>
+        <el-col :span="4">
+          <el-row>结果反馈</el-row></el-col>
         <el-col :span="20">
-          <el-row>细胞壁室结果: {{patient.cell_diagnosis}}</el-row>
+          <el-row>细胞室结果: {{patient.cell_diagnosis}}</el-row>
           <el-row>病理结果: {{patient.pathology_diagnosis | formatPathology}}</el-row>
         </el-col>
       </el-row>
     </div>
   </div>
 </template>
-<style lang="less" scoped>
-  .el-row {
-    padding: 1em;
+<style lang="less">
+  .page-preview {
+    .el-row {
+      padding: 1em;
+    }
+    .el-dialog__header {
+      padding: 10px;
+    }
+    .imagePreview {
+      max-width: 90%;
+      height: auto;
+      text-align: center;
+      margin: 10px auto;
+      display: block;
+    }
   }
-  .imagePreview {
-    max-width: 90%;
-    height: auto;
-    text-align: center;
-    margin: 10px auto;
-    display: block;
-  }
+
 </style>
 <script>
 import PatientApi from '../api/Patient'
+import Viewer from 'viewerjs'
 import {setImageUrl} from '../utils'
+import Vue from 'vue'
 export default {
   name: 'Preview',
   data () {
@@ -72,12 +93,16 @@ export default {
     }
   },
   methods:  {
-    setImageUrl (value) {
-      return setImageUrl(value)
+    setImageUrl (value, type) {
+      return setImageUrl(value, type)
     },
     previewImage (src) {
       this.imagePreview = src
       this.previewVisible = true
+      this.$nextTick(function () {
+         var viewer = new Viewer(document.getElementById('imagePreview'));
+      })
+
     }
   },
   beforeMount () {
@@ -104,6 +129,8 @@ export default {
   filters: {
     formatWeasandLens: function (value) {
       switch (value) {
+      case -1:
+        return ''
       case 0:
         return '普镜(直视下)'
       case 1:
@@ -118,6 +145,8 @@ export default {
     },
     formatSmearType: function (value) {
       switch (value) {
+        case -1:
+        return ''
         case 0:
           return '刷检(活检前)'
         case 1:
@@ -132,6 +161,8 @@ export default {
     },
     formatPathology: function (value) {
       switch (value) {
+      case '0':
+        return '无'
       case '1':
         return '肺腺癌'
       case '2':

@@ -212,7 +212,7 @@
             setImageList () {
                 var imageList = revertListToName(this.defaultImgList) // 讲服务器返回的ImageList转换成Ele上传空间需要的list
                 imageList.forEach(function (item) {
-                    item.url = setImageUrl(item.url, 'diskCover') // 添加必要前缀，供控件正确显示图片
+                    item.url = setImageUrl(item.url, 'thumbnail') // 添加必要前缀，供控件正确显示图片
                 })
                 this.fileList = imageList
             }

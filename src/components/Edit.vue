@@ -172,10 +172,10 @@ export default {
     return {
       imageList: [],
       genders: [{label: '男', value: 0},{label: '女', value: 1}],
-      pathology_diagnosis: [{label: '肺腺癌', value: '1'},{label: '肺鳞癌', value: '2'},{label: '小细胞肺癌', value: '3'},{label: '大细胞肺癌', value: '4'},{label: '肺部感染(真菌、结核)', value: '5'},
+      pathology_diagnosis: [{label: '请选择', value: '0'}, {label: '肺腺癌', value: '1'},{label: '肺鳞癌', value: '2'},{label: '小细胞肺癌', value: '3'},{label: '大细胞肺癌', value: '4'},{label: '肺部感染(真菌、结核)', value: '5'},
       {label: '机化性肺炎', value: '6'}, {label: '间质性肺炎', value: '7'}, {label: '结节病', value: '8'}, {label: '肺肉瘤', value: '9'}, {label: '未见肿瘤及肉芽肿证据', value: '10'}, {label: '其他', value: '11'}],
-      smear_types: [{label: '刷检(活检前)', value: 0}, {label: '刷检(活检后)', value: 1}, {label: '细针穿刺涂片', value: 2}, {label: '活检组织印片', value: 3}],
-      weasand_lens: [{label: '普镜(直视下)', value: 0}, {label: '普镜(TBLB)', value: 1}, {label: '外周超声(EBUS-GS)', value: 2}, {label: '中央超声(EBUS-TBNA)', value: 3}],
+      smear_types: [{label: '请选择', value: -1}, {label: '刷检(活检前)', value: 0}, {label: '刷检(活检后)', value: 1}, {label: '细针穿刺涂片', value: 2}, {label: '活检组织印片', value: 3}],
+      weasand_lens: [{label: '请选择', value: -1}, {label: '普镜(直视下)', value: 0}, {label: '普镜(TBLB)', value: 1}, {label: '外周超声(EBUS-GS)', value: 2}, {label: '中央超声(EBUS-TBNA)', value: 3}],
       form: {
         date: '2017-02-24',
         gender: 0,
@@ -183,9 +183,9 @@ export default {
         name: '',
         no: '',
         number: '',
-        smears: [{location: '', weasand_lens: 0, type: 0, diagnosis: '', images: []}],
+        smears: [{location: '', weasand_lens: -1, type: -1, diagnosis: '', images: []}],
         cell_diagnosis: '',
-        pathology_diagnosis: '1',
+        pathology_diagnosis: '0',
         images: [],
         remark: ''
       },
@@ -209,6 +209,7 @@ export default {
         this.form.no = patient.no
         this.form.number = patient.number
         this.form.smears = patient.smears
+        this.form.remark = patient.remark
         this.form.cell_diagnosis = patient.cell_diagnosis
         this.form.pathology_diagnosis = patient.pathology_diagnosis
         this.history_image_list = patient.images.filter(function (item) {
@@ -241,7 +242,7 @@ export default {
       this.form.date = value
     },
     addSmear () {
-      this.form.smears.push({location: '', weasand_lens: 0, type: 0, diagnosis: '', images: []})
+      this.form.smears.push({location: '', weasand_lens: -1, type: -1, diagnosis: '', images: []})
     },
     formSmearRefs (index) {
       return 'smearImage' + index

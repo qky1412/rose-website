@@ -1,6 +1,6 @@
 <template>
     <div>
-      <el-menu default-active="1" class="el-menu-demo" mode="horizontal">
+      <el-menu default-active="1" class="el-menu-demo" mode="horizontal" @select="handleSelect">
         <el-menu-item index="1">ROSE</el-menu-item>
       </el-menu>
       <keep-alive>
@@ -15,6 +15,11 @@
     data () {
       return {
         fakeMsg: 'this is a fake msg'
+      }
+    },
+    methods: {
+      handleSelect (key, keyPath) {
+        this.$router.replace('/home')
       }
     },
     mounted () {
