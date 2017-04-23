@@ -21,7 +21,7 @@
       <el-row>
         <p>简要病史、胸部CT、气管镜报告、病理报告</p>
         <div id="images1">
-          <img v-for="image in patient.images" :src="setImageUrl(image.url)" width="400px" style="max-width: 100%;margin-right: 1em;" @click="previewImage(setImageUrl(image.url, 'origin'))"/>
+          <img v-for="image in patient.images" :src="setImageUrl(image.url)" width="400px" style="max-width: 100%;margin-right: 1em;"/>
         </div>
 
       </el-row>
@@ -33,8 +33,8 @@
           <el-col :span="12">气管镜: {{smear.weasand_lens | formatWeasandLens}}</el-col>
           <el-col :span="12">涂片类型: {{smear.type | formatSmearType}}</el-col>
         </el-row>
-        <el-row>
-          <img v-for="image in smear.images" :src="setImageUrl(image.url)" width="400px" style="max-width: 100%;margin-right: 1em;" @click="previewImage(setImageUrl(image.url, 'origin'))"/>
+        <el-row :id="'smearImages' + $index">
+          <img v-for="image in smear.images" :src="setImageUrl(image.url)" width="400px" style="max-width: 100%;margin-right: 1em;"/>
         </el-row>
         <hr />
         <el-row>ROSE诊断: {{smear.diagnosis}}</el-row>
@@ -89,7 +89,8 @@ export default {
       dataLoading: true,
       patient: {},
       imagePreview: '',
-      previewVisible: false
+      previewVisible: false,
+      viewer1: null
     }
   },
   methods:  {
@@ -112,6 +113,12 @@ export default {
       if (response.data.result.id != null) {
         this.patient = response.data.result
         this.dataLoading = false
+        this.$nextTick(function () {
+          this.viewer1 = new Viewer(document.getElementById('images1'))
+          this.patient.smears.forEach(function (item, index) {
+            let _ = new Viewer(document.getElementById('smearImages' + index))
+          })
+        })
       } else {
         this.$message({
           message: '获取数据失败',
