@@ -150,6 +150,14 @@
               <el-input v-model="form.remark"></el-input>
             </el-form-item>
           </el-col>
+          <el-col :span="8">
+            <label>病理报告</label>
+            <single-image ref="image_diagnosis"
+                          :default-img-list="diagnosis_image_list"
+                          key-prefix="rose_diagnosis">
+
+            </single-image>
+          </el-col>
         </el-row>
       </el-card>
       <el-row style="text-align: center;padding: 1em;">
@@ -172,8 +180,8 @@ export default {
     return {
       imageList: [],
       genders: [{label: '男', value: 0},{label: '女', value: 1}],
-      pathology_diagnosis: [{label: '请选择', value: '0'}, {label: '肺腺癌', value: '1'},{label: '肺鳞癌', value: '2'},{label: '小细胞肺癌', value: '3'},{label: '大细胞肺癌', value: '4'},{label: '肺部感染(真菌、结核)', value: '5'},
-      {label: '机化性肺炎', value: '6'}, {label: '间质性肺炎', value: '7'}, {label: '结节病', value: '8'}, {label: '肺肉瘤', value: '9'}, {label: '未见肿瘤及肉芽肿证据', value: '10'}, {label: '其他', value: '11'}],
+      pathology_diagnosis: [{label: '请选择', value: '0'},{label: '肺腺癌', value: '1'},{label: '肺鳞癌', value: '2'},{label: '小细胞肺癌', value: '3'},{label: '其他类型肺部肿瘤', value: '4'},{label: '肺部感染(真菌、结核)', value: '5'},
+      {label: '间质性疾病', value: '6'}, {label: '炎症性病变', value: '7'}, {label: '支气管及肺组织', value: '8'}, {label: '其他', value: '11'}],
       smear_types: [{label: '请选择', value: -1}, {label: '刷检(活检前)', value: 0}, {label: '刷检(活检后)', value: 1}, {label: '细针穿刺涂片', value: 2}, {label: '活检组织印片', value: 3}],
       weasand_lens: [{label: '请选择', value: -1}, {label: '普镜(直视下)', value: 0}, {label: '普镜(TBLB)', value: 1}, {label: '外周超声(EBUS-GS)', value: 2}, {label: '中央超声(EBUS-TBNA)', value: 3}],
       form: {
@@ -221,6 +229,9 @@ export default {
         this.report_image_list = patient.images.filter(function (item) {
           return item.type === 2
         })
+        this.diagnosis_image_list = patient.images.filter(function (item) {
+          return item.type === 3
+        })
         this.dataLoading = false
       } else {
         this.$message({
@@ -264,7 +275,7 @@ export default {
     onSubmit (formName) {
       var _self = this
       this.posting = true
-      const images = {images: this.$refs.image_history.getFileList(0).concat(this.$refs.image_image.getFileList(1)).concat(this.$refs.image_report.getFileList(2))}
+      const images = {images: this.$refs.image_history.getFileList(0).concat(this.$refs.image_image.getFileList(1)).concat(this.$refs.image_report.getFileList(2)).concat(this.$refs.image_diagnosis.getFileList(3))}
       const params = Object.assign(this.form, images)
       this.form.smears.forEach( function (item, index) {
         var images = _self.$refs.smearImages[index].getFileList(0)

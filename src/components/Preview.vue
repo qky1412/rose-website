@@ -19,7 +19,7 @@
       </el-row>
       <hr />
       <el-row>
-        <p>简要病史、胸部CT、气管镜报告</p>
+        <p>简要病史、胸部CT、气管镜报告、病理报告</p>
         <div id="images1">
           <img v-for="image in patient.images" :src="setImageUrl(image.url)" width="400px" style="max-width: 100%;margin-right: 1em;" @click="previewImage(setImageUrl(image.url, 'origin'))"/>
         </div>

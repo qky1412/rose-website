@@ -13,13 +13,11 @@
             <el-option label="肺腺癌" value="1"></el-option>
             <el-option label="肺鳞癌" value="2"></el-option>
             <el-option label="小细胞肺癌" value="3"></el-option>
-            <el-option label="大细胞肺癌" value="4"></el-option>
+            <el-option label="其他类型肺部肿瘤" value="4"></el-option>
             <el-option label="肺部感染(真菌、结核)" value="5"></el-option>
-            <el-option label="机化性肺炎" value="6"></el-option>
-            <el-option label="间质性肺炎" value="7"></el-option>
-            <el-option label="结节病" value="8"></el-option>
-            <el-option label="肺肉瘤" value="9"></el-option>
-            <el-option label="未见肿瘤及肉芽肿证据" value="10"></el-option>
+            <el-option label="间质性疾病" value="6"></el-option>
+            <el-option label="炎症性病变" value="7"></el-option>
+            <el-option label="支气管及肺组织" value="8"></el-option>
             <el-option label="其他" value="11"></el-option>
           </el-select>
         </el-form-item>
@@ -240,19 +238,15 @@ export default {
       case '3':
         return '小细胞肺癌'
       case '4':
-        return '大细胞肺癌'
+        return '其他类型肺部肿瘤'
       case '5':
         return '肺部感染(真菌、结核)'
       case '6':
-        return '机化性肺炎'
+        return '间质性疾病'
       case '7':
-        return '间质性肺炎'
-      case '8':
-        return '结节病'
-      case '9':
-        return '肺肉瘤'
-      case '10':
-        return '未见肿瘤及肉芽肿证据'
+        return '炎症性病变'
+      case '7':
+        return '支气管及肺组织'
       default:
         return '其他'
       }
