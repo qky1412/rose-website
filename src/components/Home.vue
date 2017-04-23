@@ -23,11 +23,11 @@
             <el-option label="其他" value="11"></el-option>
           </el-select>
         </el-form-item>
-        <el-button type="primary" class="button-new" @click="create" icon="plus">新建</el-button>
+        <el-button type="primary" class="button-new" @click="create" icon="plus" v-if="user != null && user.username == 'admin'">新建</el-button>
         <el-button type="button" @click="handleSubmit" icon="search">查询</el-button>
       </el-form>
     </el-row>
-    <el-table :data="tableData" border v-loading="loadingList" element-loading-text="拼命加载中" style="width: 100%" stripe>
+    <el-table :data="tableData" border v-loading="loadingList" element-loading-text="拼命加载中" stripe>
       <el-table-column
         label="编号"
         width="100"
@@ -99,8 +99,8 @@
         width="160">
         <template scope="scope">
           <el-button type="text" @click="enterPreview(scope.row)">查看</el-button>
-          <el-button type="text" @click="enterEdit(scope.row)">编辑</el-button>
-          <el-button type="text" @click="handleDelete(scope.row)" style="color: red;">删除</el-button>
+          <el-button type="text" @click="enterEdit(scope.row)" v-if="user != null && user.username == 'admin'">编辑</el-button>
+          <el-button type="text" @click="handleDelete(scope.row)" v-if="user != null && user.username == 'admin'" style= "color: red;">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -124,6 +124,7 @@
 <script>
 import PatientApi from '../api/Patient'
 import {eventHandler} from '../EventHandler'
+import UserApi from '../api/User'
 export default {
   name: 'Home',
   data () {
@@ -141,8 +142,12 @@ export default {
       pageSize: 15,
       pageSizes: [15, 30, 50, 80],
       total: 0,
-      pageLayout: 'total, prev, pager, next, jumper'
+      pageLayout: 'total, prev, pager, next, jumper',
+      user: null
     }
+  },
+  beforeMount () {
+     this.user = UserApi.getUser()
   },
   methods: {
     handleSubmit () {
